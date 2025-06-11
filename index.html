@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Slope 3 Hacker</title>
+    <style>
+      :root {
+        --primary-color: #4a90e2;
+        --secondary-color: #50c878;
+        --background-color: #f4f7f6;
+        --text-color: #333;
+        --card-background: #ffffff;
+        --border-radius: 12px;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: var(--background-color);
+        color: var(--text-color);
+        line-height: 1.6;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        background-color: var(--card-background);
+        border-radius: var(--border-radius);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+      }
+
+      h1 {
+        text-align: center;
+        color: var(--primary-color);
+        margin-bottom: 30px;
+        font-weight: 600;
+      }
+
+      h2 {
+        color: var(--secondary-color);
+        margin: 20px 0 15px;
+        border-bottom: 2px solid var(--secondary-color);
+        padding-bottom: 10px;
+      }
+
+      .input-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin-bottom: 20px;
+      }
+
+      .input-group > div {
+        flex: 1;
+        min-width: 200px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: 500;
+        color: var(--text-color);
+      }
+
+      input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        transition: border-color 0.3s ease;
+      }
+
+      input:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+      }
+
+      button {
+        width: 100%;
+        padding: 12px;
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.1s ease;
+      }
+
+      button:hover {
+        background-color: #3a7bd5;
+      }
+
+      button:active {
+        transform: scale(0.98);
+      }
+
+      table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        margin-top: 20px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+      }
+
+      table th {
+        background-color: var(--primary-color);
+        color: white;
+        padding: 15px;
+        text-align: left;
+        text-transform: uppercase;
+        font-weight: 600;
+      }
+
+      table td {
+        padding: 15px;
+        border-bottom: 1px solid #eee;
+        background-color: white;
+      }
+
+      table tr:nth-child(even) td {
+        background-color: #f9f9f9;
+      }
+
+      table tr:hover td {
+        background-color: #f1f6ff;
+      }
+
+      .see-changes {
+        text-align: center;
+        margin-top: 20px;
+      }
+
+      .see-changes a {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: var(--secondary-color);
+        color: white;
+        text-decoration: none;
+        font-weight: bold;
+        border-radius: 8px;
+        transition: background-color 0.3s ease;
+      }
+
+      .see-changes a:hover {
+        background-color: #3cbb70;
+      }
+
+      @media (max-width: 600px) {
+        .container {
+          padding: 15px;
+        }
+
+        .input-group {
+          flex-direction: column;
+        }
+
+        .input-group > div {
+          min-width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Slope 3 Leaderboard hacker</h1>
+
+      <div class="input-group">
+        <div>
+          <label for="playerName">Player Name:</label>
+          <input type="text" id="playerName" placeholder="Enter player name" />
+        </div>
+
+        <div>
+          <label for="score">Score:</label>
+          <input type="text" id="score" placeholder="Enter score" />
+        </div>
+      </div>
+
+      <button onclick="submitScore()">Submit Score</button>
+
+      <h2>Leaderboard</h2>
+
+      <div class="input-group">
+        <div>
+          <label for="stime">Start Time:</label>
+          <input type="datetime-local" id="stime" />
+        </div>
+
+        <div>
+          <label for="etime">End Time:</label>
+          <input type="datetime-local" id="etime" />
+        </div>
+      </div>
+
+      <button onclick="loadScores()">Load Scores</button>
+
+      <table id="scores">
+        <tbody>
+          <!-- Scores will be dynamically inserted here -->
+        </tbody>
+      </table>
+
+      <div class="see-changes">
+        <a href="https://slope3.com/" target="_blank">See Your Changes!</a>
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.19.0/js/md5.min.js"></script>
+    <script>
+      async function makeReq(body, endpoint) {
+        return await fetch(
+          "https://api.apileaderboards.com/point/" + endpoint,
+          {
+            headers: {
+              "content-type": "application/x-www-form-urlencoded",
+            },
+            referrer: "https://slope3.com/",
+            referrerPolicy: "strict-origin-when-cross-origin",
+            body,
+            method: "POST",
+            mode: "cors",
+            credentials: "omit",
+          }
+        );
+      }
+
+      function getSaveBody(
+        player_id,
+        player_name,
+        key1,
+        key2,
+        key3,
+        point1,
+        point2,
+        point3
+      ) {
+        return `game_id=63be3a679932520bd5087abb&player_id=${player_id}&player_name=${player_name}&key1=${key1}&key2=${key2}&key3=${key3}&point1=${point1}&point2=${point2}&point3=${point3}&signature=${md5(
+          "1102123Green@L!ne2363be3a679932520bd5087abb" +
+            player_id +
+            player_name +
+            key1 +
+            key2 +
+            key3 +
+            point1 +
+            point2 +
+            point3
+        )}`;
+      }
+
+      function getMainSaveReq(player_name, points) {
+        return getSaveBody(0, player_name, "", "", "", points, 0, 0);
+      }
+
+      async function saveScore(player_name, points) {
+        return await makeReq(getMainSaveReq(player_name, points), "save2");
+      }
+
+      async function getScores(start_time, end_time) {
+        const scores = await makeReq(getReq(start_time, end_time), "get2");
+        const data = await scores.json();
+        if (!data.success) {
+          console.error("Failed to fetch scores");
+          return [];
+        }
+        return data.point_top;
+      }
+
+      function createTd(text) {
+        const td = document.createElement("td");
+        td.innerText = text;
+        return td;
+      }
+
+      async function update(startTime, endTime) {
+        const scores = await getScores(startTime, endTime);
+        updateTable(scores);
+      }
+
+      function updateTable(scores) {
+        document.querySelector("#scores tbody").innerHTML = "";
+        var t = document.createElement("tbody");
+        t.innerHTML += `<tr><th>Name</th><th>Score</th><th>Date Created</th></tr>`;
+        scores.forEach((e) => {
+          var tr = document.createElement("tr");
+          tr.appendChild(createTd(e.player_name));
+          tr.appendChild(createTd(e.point1));
+          tr.appendChild(createTd(new Date(e.createdAt).toLocaleString()));
+          t.appendChild(tr);
+        });
+        document.querySelector("#scores").appendChild(t);
+      }
+
+      function loadScores() {
+        const stime = document.querySelector("#stime").value;
+        const etime = document.querySelector("#etime").value;
+        update(stime, etime);
+      }
+
+      function getString(d) {
+        const date = new Date(d);
+        return `${date.getFullYear()}-${(date.getMonth() + 1)
+          .toString()
+          .padStart(2, "0")}-${date
+          .getDate()
+          .toString()
+          .padStart(2, "0")}T${date
+          .getHours()
+          .toString()
+          .padStart(2, "0")}:${date.getMinutes().toString().padStart(2, "0")}`;
+      }
+
+      document.querySelector("#stime").value = getString(
+        new Date().setDate(new Date().getDate() - 1)
+      );
+      document.querySelector("#etime").value = getString(new Date());
+
+      async function submitScore() {
+        const playerName = document.querySelector("#playerName").value;
+        const score = document.querySelector("#score").value;
+        if (playerName && score) {
+          await saveScore(playerName, score);
+          alert("Score submitted successfully!");
+          loadScores();
+        } else {
+          alert("Please enter both player name and score.");
+        }
+      }
+    </script>
+  </body>
+</html>
