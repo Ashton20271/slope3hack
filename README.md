@@ -2,7 +2,7 @@
 hacks for slope 3 leaderboard
 
 
-#stites
+# stites
 https://ashton20271.github.io/slope3hack/
 https://slope3hack.vercel.app/
 https://slope3hack.glitch.me/
